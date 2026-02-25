@@ -31,22 +31,57 @@ def normalize_genre(genre: str) -> str:
     return genre.lower().strip()
 
 
+# def normalize_song(raw: Song) -> Song:
+#     """Return a normalized song dict with expected keys."""
+#     title = normalize_title(str(raw.get("title", "")))
+#     artist = normalize_artist(str(raw.get("artist", "")))
+#     genre = normalize_genre(str(raw.get("genre", "")))
+#     energy = raw.get("energy", 0)
+
+#     if isinstance(energy, str):
+#         try:
+#             energy = int(energy)
+#         except ValueError:
+#             energy = 0
+
+#     tags = raw.get("tags", [])
+#     if isinstance(tags, str):
+#         tags = [tags]
+
+#     return {
+#         "title": title,
+#         "artist": artist,
+#         "genre": genre,
+#         "energy": energy,
+#         "tags": tags,
+#     }
+
+
+
 def normalize_song(raw: Song) -> Song:
     """Return a normalized song dict with expected keys."""
-    title = normalize_title(str(raw.get("title", "")))
-    artist = normalize_artist(str(raw.get("artist", "")))
-    genre = normalize_genre(str(raw.get("genre", "")))
+    
+    def to_str(val: object) -> str:
+        return str(val).strip() if val else ""
+    
+    # Normalize fields
+    title = to_str(raw.get("title", ""))
+    artist = to_str(raw.get("artist", "")).lower()
+    genre = to_str(raw.get("genre", "")).lower()
+    
+    # Normalize energy
     energy = raw.get("energy", 0)
-
     if isinstance(energy, str):
         try:
             energy = int(energy)
         except ValueError:
             energy = 0
 
+    # Normalize tags
     tags = raw.get("tags", [])
     if isinstance(tags, str):
         tags = [tags]
+    tags = [t.strip() for t in tags if t]
 
     return {
         "title": title,
@@ -55,7 +90,6 @@ def normalize_song(raw: Song) -> Song:
         "energy": energy,
         "tags": tags,
     }
-
 
 def classify_song(song: Song, profile: Dict[str, object]) -> str:
     """Return a mood label given a song and user profile."""
