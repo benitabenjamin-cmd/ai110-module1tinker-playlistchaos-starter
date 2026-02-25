@@ -112,5 +112,6 @@ If you finish early or want an extra challenge, try one of these:
 
 When you finish, Playlist Chaos will feel more predictable, and you will have taken your first steps into AI-assisted debugging.
 
-______________________________________________________________________________________PRE-WORK SUMMARY
+_____________________________________________________________________________________________________________________________________________________________________________________________PRE-WORK SUMMARY
+
 The core concept students needed to understand is how songs are classified into the playlists based on the energy, genre and keywords. Also how this affects the search and pick features. Students are most likely to struggle with understanding the normalization of song and partial matches when we search. AI, for example, Copilot chat was helpful in explaining what the code does and suggesting what to do. It could be misleading when it asks to change code that altered the intended behavior. One way to guide a student without giving them the answer would be to ask them to trace through an example to see the functionality.
