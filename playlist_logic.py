@@ -57,7 +57,7 @@ def normalize_genre(genre: str) -> str:
 #     }
 
 
-
+#### RE-FACTOR
 def normalize_song(raw: Song) -> Song:
     """Return a normalized song dict with expected keys."""
     
