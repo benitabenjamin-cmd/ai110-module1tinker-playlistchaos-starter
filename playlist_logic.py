@@ -112,22 +112,33 @@ def compute_playlist_stats(playlists: PlaylistMap) -> Dict[str, object]:
     for songs in playlists.values():
         all_songs.extend(songs)
 
+    ## total songs
+    ### Total songs should include ALL playlists (Hype, Chill, Mixed)
+    total = len(all_songs)
+
     hype = playlists.get("Hype", [])
     chill = playlists.get("Chill", [])
     mixed = playlists.get("Mixed", [])
 
-    total = len(hype)
+    ## Hype ratio must be calculated relative to total songs
     hype_ratio = len(hype) / total if total > 0 else 0.0
 
-    avg_energy = 0.0
-    if all_songs:
-        total_energy = sum(song.get("energy", 0) for song in hype)
-        avg_energy = total_energy / len(all_songs)
+    # avg_energy = 0.0
+    # if all_songs:
+    #     total_energy = sum(song.get("energy", 0) for song in hype)
+    #     avg_energy = total_energy / len(all_songs)
+
+    ## Average energy must consider ALL songs
+    avg_energy = (
+        sum(song.get("energy", 0) for song in all_songs) / total
+        if total > 0 else 0.0
+    )
+
 
     top_artist, top_count = most_common_artist(all_songs)
 
     return {
-        "total_songs": len(all_songs),
+        "total_songs": total,
         "hype_count": len(hype),
         "chill_count": len(chill),
         "mixed_count": len(mixed),
@@ -168,7 +179,8 @@ def search_songs(
 
     for song in songs:
         value = str(song.get(field, "")).lower()
-        if value and value in q:
+       ## partial matches fix 
+        if value and q in value:
             filtered.append(song)
 
     return filtered
@@ -184,7 +196,8 @@ def lucky_pick(
     elif mode == "chill":
         songs = playlists.get("Chill", [])
     else:
-        songs = playlists.get("Hype", []) + playlists.get("Chill", [])
+        ### Any mode should pull from Hype + Chill + Mixed playlists
+        songs = playlists.get("Hype", []) + playlists.get("Chill", []) + playlists.get("Mixed", [])
 
     return random_choice_or_none(songs)
 
@@ -193,6 +206,10 @@ def random_choice_or_none(songs: List[Song]) -> Optional[Song]:
     """Return a random song or None."""
     import random
 
+    ## Prevent crash when playlist is empty
+    if not songs:
+        return None
+    
     return random.choice(songs)
 
 
